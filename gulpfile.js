@@ -2,6 +2,7 @@
 
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
+    sass = require('gulp-sass'),
     uglifycss = require('gulp-uglifycss'),
     rename = require('gulp-rename'),
     del = require('del'),
@@ -28,6 +29,36 @@ gulp.task('build-css-prod', function() {
     .pipe(gulp.dest('resources'));	
 });
 
+gulp.task('build-theme', function() {
+    var themes = [
+            'bootstrap',
+            'cruze',
+            'cupertino',
+            'darkness',
+            'flick',
+            'home',
+            'kasper',
+            'lightness',
+            'ludvig',
+            'omega',
+            'pepper-grinder',
+            'redmond',
+            'rocket',
+            'south-street',
+            'start',
+            'trontastic',
+            'voclain'
+    ]
+    themes.map(function(theme){
+    gulp.src([
+        'resources/themes/'+ theme +'/theme.scss'
+    ])
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename('theme.css'))
+    .pipe(gulp.dest('resources/themes/'+ theme));
+    })
+});
+
 //Building images
 gulp.task('images', function() {
     return gulp.src(['components/**/images/*.png', 'components/**/images/*.gif'])
@@ -41,6 +72,4 @@ gulp.task('clean', function() {
 });
 
 //Building project with run sequence
-gulp.task('build', ['clean','build-css-prod', 'images']);
-
-        
+gulp.task('build', ['clean','build-css-prod', 'build-theme', 'images']);
